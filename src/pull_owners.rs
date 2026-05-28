@@ -11,7 +11,7 @@ struct OwnerRow {
 
 async fn fetch_owners() -> Result<Vec<serde_json::Value>, Box<dyn std::error::Error>> {
 
-    let (items, includes) = request_from_pc::get_pc_data(
+    let (items, _) = request_from_pc::get_pc_data(
         "/groups/v2/groups/828975/people",
         "",
         &std::env::var("PC_USERNAME").expect("PC_USERNAME must be set"),

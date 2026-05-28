@@ -20,7 +20,7 @@ struct ResourceRow {
     kind: bool,
 }
 #[derive(Clone)]
-pub struct Event_rrRow {
+pub struct EventRrRow {
     pub id: i64,
     notes: String,
     event_id: i64,
@@ -49,7 +49,7 @@ async fn fetch_resource_bookings() -> Result<(Vec<serde_json::Value>, Vec<serde_
 pub async fn pull_resource_bookings(pool: sqlx::PgPool) -> Result<(), Box<dyn std::error::Error>> {
     let (rbs, includes) = fetch_resource_bookings().await?;
     
-    let mut event_rr_rows: Vec<Event_rrRow> = Vec::new();
+    let mut event_rr_rows: Vec<EventRrRow> = Vec::new();
     let mut resource_rows: Vec<ResourceRow> = Vec::new();
     let mut rb_rows: Vec<RbRow> = Vec::new();
 
@@ -163,8 +163,8 @@ async fn parse_rb_row(item: &serde_json::Value) -> RbRow {
         resource_id,
     }
 }
-async fn parse_event_rr_row(item: &serde_json::Value) -> Event_rrRow {
-    Event_rrRow {
+async fn parse_event_rr_row(item: &serde_json::Value) -> EventRrRow {
+    EventRrRow {
         id: item["id"].as_str().unwrap_or("0").parse::<i64>().unwrap_or(0),
         notes: item["attributes"]["notes"].as_str().unwrap_or_default().to_string(),
         event_id: item["relationships"]["event"]["data"]["id"]

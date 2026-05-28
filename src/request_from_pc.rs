@@ -16,7 +16,7 @@ pub async fn get_pc_data(
     let mut all_items: Vec<Value> = Vec::new();
     let mut all_includes: Vec<Value> = Vec::new();
     let mut offset: u32 = 0;
-    let mut pages_fetched = 0;
+    let mut _pages_fetched = 0;
     loop {
         let query = if params.is_empty() {
             format!("per_page={PER_PAGE}&offset={offset}")
@@ -59,8 +59,8 @@ pub async fn get_pc_data(
         if fetched < PER_PAGE || offset >= total {
             break;
         }
-        pages_fetched += 1;
+        _pages_fetched += 1;
     }
-    //println!("Fetched {} pages of data from {}", pages_fetched, endpoint);
+    
     Ok((all_items, all_includes))
 }

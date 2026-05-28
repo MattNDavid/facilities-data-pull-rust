@@ -1,7 +1,6 @@
 use crate::request_from_pc;
 use crate::pull_resource_bookings;
 use sqlx::QueryBuilder;
-use serde_json::Value;
 
 struct AnswerRow {
     id: i64,
@@ -19,15 +18,15 @@ async fn fetch_answers(event_resource_request_id: i64) -> Result<Vec<serde_json:
             &std::env::var("PC_PASSWORD").expect("PC_PASSWORD must be set"),
         ).await {
             Ok((items, _)) => return Ok(items),
-            Err(e) => {
-                eprintln!("Error fetching answers for {}. Retrying in 20 seconds...", event_resource_request_id);
+            Err(_e) => {
+                //This is almost always an API rate limit issue. Wait 20 seconds and try again.
                 tokio::time::sleep(std::time::Duration::from_secs(20)).await;
             }
         }
     }
 }
 
-pub async fn pull_answers(pool: sqlx::PgPool, event_rr_rows: Vec<pull_resource_bookings::Event_rrRow>) -> Result<(), Box<dyn std::error::Error>> {
+pub async fn pull_answers(pool: sqlx::PgPool, event_rr_rows: Vec<pull_resource_bookings::EventRrRow>) -> Result<(), Box<dyn std::error::Error>> {
     let total = event_rr_rows.len();
 
     if total == 0 {
@@ -35,7 +34,7 @@ pub async fn pull_answers(pool: sqlx::PgPool, event_rr_rows: Vec<pull_resource_b
     }
 
     let chunk_size = (total + 19) / 20;
-    let chunks: Vec<Vec<pull_resource_bookings::Event_rrRow>> = event_rr_rows
+    let chunks: Vec<Vec<pull_resource_bookings::EventRrRow>> = event_rr_rows
         .chunks(chunk_size)
         .map(|c| c.to_vec())
         .collect();

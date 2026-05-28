@@ -1,13 +1,12 @@
 use crate::request_from_pc;
-use chrono::{Local, NaiveDate, NaiveTime, Datelike, Duration};
 use sqlx::QueryBuilder;
 
-struct tagGroupRow {
+struct TagGroupRow {
     id: i64,
     name: String,
 }
 
-struct tagRow {
+struct TagRow {
     id: i64,
     name: String,
     color: String,
@@ -27,8 +26,8 @@ async fn fetch_tag_groups() -> Result<(Vec<serde_json::Value>, Vec<serde_json::V
 pub async fn pull_tag_groups(pool: sqlx::PgPool) -> Result<(), Box<dyn std::error::Error>> {
     let (tag_groups, includes) = fetch_tag_groups().await?;
 
-    let mut tag_group_rows: Vec<tagGroupRow> = Vec::new();
-    let mut tag_rows: Vec<tagRow> = Vec::new();
+    let mut tag_group_rows: Vec<TagGroupRow> = Vec::new();
+    let mut tag_rows: Vec<TagRow> = Vec::new();
     let mut tag_group_tag_map_rows: Vec<(i64, i64)> = Vec::new();
 
 
@@ -96,15 +95,15 @@ pub async fn pull_tag_groups(pool: sqlx::PgPool) -> Result<(), Box<dyn std::erro
     Ok(())
 }
 
-fn parse_tag_group_row(item: &serde_json::Value) -> tagGroupRow {
-    tagGroupRow {
+fn parse_tag_group_row(item: &serde_json::Value) -> TagGroupRow {
+    TagGroupRow {
         id: item["id"].as_str().unwrap_or_default().parse::<i64>().unwrap_or_default(),
         name: item["attributes"]["name"].as_str().unwrap_or_default().to_string(),
     }
 }
 
-fn parse_tag_row(item: &serde_json::Value) -> tagRow {
-    tagRow {
+fn parse_tag_row(item: &serde_json::Value) -> TagRow {
+    TagRow {
         id: item["id"].as_str().unwrap_or_default().parse::<i64>().unwrap_or_default(),
         name: item["attributes"]["name"].as_str().unwrap_or_default().to_string(),
         color: item["attributes"]["color"].as_str().unwrap_or_default().to_string(),
