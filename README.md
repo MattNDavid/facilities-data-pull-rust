@@ -66,7 +66,7 @@ Key design decisions:
 - **Pagination** is handled automatically (100 items per page, offset tracking).
 - **Batching** splits inserts into chunks of 5000 rows to stay within PostgreSQL's bind-parameter limit.
 - **Parallelism** for answers: event resource request IDs are split into 20 concurrent tokio tasks.
-- **Retry** logic on answer fetches: sleeps 20 seconds and retries once on API failure.
+- **Retry** PCO API has a rate limit of 100 request per 20 seconds. Logic on answer fetches: sleeps 20 seconds and retries once on API failure.
 
 ## Dependencies
 
