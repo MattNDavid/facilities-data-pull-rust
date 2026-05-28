@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict U5VxZqAPZLFFzqTJiapnxqJ6gj6ng3oNcVrp8Mp21hpMsZONhjEqMb8iHH1gjsz
+\restrict ybaqg7bTEPuqSWp0JhDKY9RF5o2fqzfjmyfJH5MUZ7qXaL3rjvR8J8uUW7K3V7K
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
@@ -141,6 +141,35 @@ CREATE TABLE public.resources (
 ALTER TABLE public.resources OWNER TO postgres;
 
 --
+-- Name: facilities_schedule; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.facilities_schedule AS
+ SELECT resource_bookings.id,
+    resource_bookings.date,
+    resource_bookings.start_time,
+    resource_bookings.end_time,
+    resources.name AS resource_name,
+    events.name AS event_name,
+    events.owner_id,
+    event_resource_requests.notes,
+    owners.first_name,
+    owners.last_name,
+    owners.email,
+    answers.question,
+    answers.answer
+   FROM (((((public.resource_bookings
+     JOIN public.resources ON ((resource_bookings.resource_id = resources.id)))
+     JOIN public.events ON ((events.id = resource_bookings.event_id)))
+     JOIN public.event_resource_requests ON ((event_resource_requests.id = resource_bookings.event_resource_request_id)))
+     LEFT JOIN public.owners ON ((events.owner_id = owners.id)))
+     LEFT JOIN public.answers ON ((event_resource_requests.id = answers.event_resource_request_id)))
+  WHERE ((answers.question)::text = 'Exception to regular setup?'::text);
+
+
+ALTER VIEW public.facilities_schedule OWNER TO postgres;
+
+--
 -- Name: tag_groups; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -277,5 +306,5 @@ ALTER TABLE ONLY public.tag_groups_tags_map
 -- PostgreSQL database dump complete
 --
 
-\unrestrict U5VxZqAPZLFFzqTJiapnxqJ6gj6ng3oNcVrp8Mp21hpMsZONhjEqMb8iHH1gjsz
+\unrestrict ybaqg7bTEPuqSWp0JhDKY9RF5o2fqzfjmyfJH5MUZ7qXaL3rjvR8J8uUW7K3V7K
 
