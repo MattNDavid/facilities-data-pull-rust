@@ -30,7 +30,8 @@ pub struct EventRrRow {
 }
 async fn fetch_resource_bookings() -> Result<(Vec<serde_json::Value>, Vec<serde_json::Value>), Box<dyn std::error::Error>> {
     let now = Local::now();
-    let start_date = NaiveDate::from_ymd_opt(now.year(), now.month(), 1).unwrap();
+    let today = now.date_naive();
+    let start_date = today - Duration::days(today.weekday().num_days_from_sunday() as i64);
     let end_date = start_date + Duration::days(7);
     
     let (items, includes) = request_from_pc::get_pc_data(

@@ -1,10 +1,4 @@
-mod db_pool;
-mod request_from_pc;
-mod pull_event_instances;
-mod pull_resource_bookings;
-mod pull_owners;
-mod pull_tag_groups;
-mod pull_answers;
+use facilities_data_pull_rust::{db_pool, pull_event_instances, pull_resource_bookings, pull_owners, pull_tag_groups};
 
 #[tokio::main]
 async fn main() {
