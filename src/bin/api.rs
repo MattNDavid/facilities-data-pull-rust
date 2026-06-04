@@ -36,6 +36,9 @@ async fn get_schedule(State(pool): State<PgPool>, Query(params): Query<ScheduleP
     if let Some(event_instance_id) = params.event_instance_id {
         qb.push(" AND event_instance_id = ").push_bind(event_instance_id);
     }
+    if let Some(event_name) = params.event_name {
+        qb.push(" AND event_name = ").push_bind(event_name);
+    }
 
     qb.push(" ORDER BY date, start_time");
 
@@ -98,6 +101,7 @@ struct ScheduleRow {
     event_name: String,
     owner_id: Option<i32>,
     notes: Option<String>,
+    room_setup_id: Option<i32>,
     first_name: Option<String>,
     last_name: Option<String>,
     email: Option<String>,
@@ -118,6 +122,7 @@ struct ScheduleParams {
     date_gte: Option<NaiveDate>,
     date_lte: Option<NaiveDate>,
     event_instance_id: Option<i32>,
+    event_name: Option<String>,
 }
 #[derive(serde::Deserialize)]
 struct EventParams {
