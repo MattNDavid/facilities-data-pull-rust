@@ -25,6 +25,8 @@ pub async fn get_pc_data(
         };
 
         let url = format!("{BASE_URL}{endpoint}?{query}");
+        
+        println!("Fetching URL: {}", url);
 
         let response = client
             .get(&url)
@@ -35,10 +37,14 @@ pub async fn get_pc_data(
             .json::<Value>()
             .await?;
 
-        // Extract items and included data; if "data" is missing or not an array, break the loop
-        let items = match response.get("data").and_then(|d| d.as_array()) {
-            Some(data) => data.clone(),
-            None => break,
+        // Extract items and included data; handle both array (list) and object (single-item) responses
+        let items = match response.get("data") {
+            Some(d) if d.is_array() => d.as_array().unwrap().clone(),
+            Some(d) if d.is_object() => {
+                all_items.push(d.clone());
+                break;
+            }
+            _ => break,
         };
 
         let includes = response.get("included")

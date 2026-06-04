@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict ybaqg7bTEPuqSWp0JhDKY9RF5o2fqzfjmyfJH5MUZ7qXaL3rjvR8J8uUW7K3V7K
+\restrict 8UcwwvwrIBHrJkRUdyYzQ9Zhw1fFolp71P7wM5e7iiszmcY60X8hSpP1DOfaees
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
@@ -96,6 +96,21 @@ CREATE TABLE public.events (
 ALTER TABLE public.events OWNER TO postgres;
 
 --
+-- Name: event_schedule; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.event_schedule AS
+ SELECT event_instances.id AS event_instance_id,
+    events.name AS event_name,
+    event_instances.date,
+    event_instances.start_time
+   FROM (public.event_instances
+     JOIN public.events ON ((events.id = event_instances.event_id)));
+
+
+ALTER VIEW public.event_schedule OWNER TO postgres;
+
+--
 -- Name: owners; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -153,6 +168,7 @@ CREATE VIEW public.facilities_schedule AS
     events.name AS event_name,
     events.owner_id,
     event_resource_requests.notes,
+    event_resource_requests.room_setup_id,
     owners.first_name,
     owners.last_name,
     owners.email,
@@ -306,5 +322,5 @@ ALTER TABLE ONLY public.tag_groups_tags_map
 -- PostgreSQL database dump complete
 --
 
-\unrestrict ybaqg7bTEPuqSWp0JhDKY9RF5o2fqzfjmyfJH5MUZ7qXaL3rjvR8J8uUW7K3V7K
+\unrestrict 8UcwwvwrIBHrJkRUdyYzQ9Zhw1fFolp71P7wM5e7iiszmcY60X8hSpP1DOfaees
 
