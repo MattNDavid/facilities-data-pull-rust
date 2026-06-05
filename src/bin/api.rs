@@ -85,7 +85,7 @@ async fn get_setup(Query(params): Query<SetupParams>) -> Result<String, (StatusC
         name: items[0]["attributes"]["name"].as_str().unwrap_or_default().to_string(),
         url: items[0]["attributes"]["diagram_url"].as_str().unwrap_or_default().to_string(),
     };
-
+    
     let setup_info = serde_json::to_string(&setup_info).unwrap();
 
     Ok(setup_info)
