@@ -16,7 +16,7 @@ Pulls the following data from the PCO Calendar and Groups APIs and upserts it in
 | Owners | `/groups/v2/groups/828975/people` | `owners` |
 | Tag groups & tags | `/calendar/v2/tag_groups` | `tag_groups`, `tags`, `tag_groups_tags_map` |
 
-Each run fetches data for the current month plus 7 days. All inserts use `ON CONFLICT` upsert, so re-runs are safe.
+Each run fetches data for the current day plus 7 days. All inserts use `ON CONFLICT` upsert, so re-runs are safe.
 
 ### API server (`cargo run --bin api`)
 
